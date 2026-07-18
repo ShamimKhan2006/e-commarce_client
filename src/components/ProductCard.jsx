@@ -13,7 +13,7 @@ export default function ProductCard({ product }) {
       transition={{ duration: 0.5 }}
       whileHover={{ y: -8, transition: { duration: 0.2 } }}
     >
-      <Link href={`/product/${product.id}`} className="block h-full w-full group">
+      <Link href={`/product/${product._id}`} className="block h-full w-full group">
         <div className="flex flex-col bg-background rounded-xl overflow-hidden border border-border shadow-sm hover:shadow-md transition-all h-full">
           {/* Image */}
           <div className="relative aspect-square overflow-hidden bg-muted">

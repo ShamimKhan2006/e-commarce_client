@@ -1,7 +1,11 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowRight, Star, ShoppingBag, Truck, ShieldCheck, RefreshCw, Quote, MessageCircle } from "lucide-react";
 import ScrollReveal from "@/components/ScrollReveal";
 import AnimatedCard from "@/components/AnimatedCard";
+import { useCart } from "@/components/CartContext";
+import toast from "react-hot-toast";
 
 const FEATURED_PRODUCTS = [
   {
@@ -35,6 +39,7 @@ const FEATURED_PRODUCTS = [
 ];
 
 export default function Home() {
+  const { addToCart } = useCart();
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
@@ -202,7 +207,20 @@ export default function Home() {
                     </h3>
                   </Link>
                   <p className="font-medium text-muted-foreground mt-1 mb-4">{product.price}</p>
-                  <button className="mt-auto flex items-center justify-center w-full rounded-md bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground py-2.5 text-sm font-medium transition-colors">
+                  <button 
+                    onClick={() => {
+                      addToCart({
+                        id: product.id,
+                        title: product.name,
+                        price: product.price,
+                        image: product.image,
+                        category: "Featured",
+                        rating: product.rating
+                      });
+                      toast.success(`${product.name} added to cart!`);
+                    }}
+                    className="mt-auto flex items-center justify-center w-full rounded-md bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground py-2.5 text-sm font-medium transition-colors cursor-pointer"
+                  >
                     <ShoppingBag className="mr-2 h-4 w-4" />
                     Add to Cart
                   </button>
@@ -332,12 +350,12 @@ export default function Home() {
               <input 
                 type="email" 
                 placeholder="Enter your email address" 
-                className="flex-1 h-12 rounded-md bg-white/10 border border-white/20 px-4 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-white/50"
+                className="flex-1 h-12 rounded-md bg-background/25 border border-primary-foreground/20 px-4 text-primary-foreground placeholder:text-primary-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary-foreground/50"
                 required
               />
               <button 
                 type="button" 
-                className="h-12 px-6 rounded-md bg-white text-primary font-medium hover:bg-zinc-100 transition-colors"
+                className="h-12 px-6 rounded-md bg-primary-foreground text-primary font-semibold hover:opacity-90 active:scale-95 transition-all duration-200"
               >
                 Subscribe
               </button>

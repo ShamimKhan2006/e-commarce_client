@@ -5,10 +5,14 @@ import { Search, ShoppingCart, User, Menu, X, LogOut } from "lucide-react";
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { Button } from "@heroui/react";
+import ThemeToggle from "./ThemeToggle";
+import { useCart } from "@/components/CartContext";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { data: session, isPending } = authClient.useSession();
+  const { cart } = useCart();
+  const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
 
   const handleLogout = async () => {
     await authClient.signOut();
@@ -47,9 +51,10 @@ export default function Navbar() {
             <Link href="/checkout" aria-label="Cart" className="text-muted-foreground hover:text-foreground transition-colors relative">
               <ShoppingCart className="h-5 w-5" />
               <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
-                0
+                {cartCount}
               </span>
             </Link>
+            <ThemeToggle />
             
             {isPending ? (
               <div className="h-8 w-8 rounded-full bg-muted animate-pulse hidden sm:block"></div>

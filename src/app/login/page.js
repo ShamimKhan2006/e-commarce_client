@@ -6,6 +6,7 @@ import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
+import toast from "react-hot-toast";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -20,7 +21,12 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
     try {
-      const { error } = await authClient.signIn.email({ email, password });
+      const {data, error } = await authClient.signIn.email({ email, password });
+       if(data){
+        return toast.success('Login Successfully')
+       }
+
+
       if (error) {
         setError(error.message || "Invalid credentials. Please try again.");
       } else {
@@ -75,7 +81,7 @@ export default function LoginPage() {
           {/* Testimonial */}
           <div className="bg-white/10 backdrop-blur-sm border border-white/10 rounded-2xl p-5 max-w-sm">
             <p className="text-white/80 text-sm leading-relaxed mb-4">
-              "The quality here is absolutely outstanding. Every purchase has exceeded my expectations."
+              The quality here is absolutely outstanding. Every purchase has exceeded my expectations.
             </p>
             <div className="flex items-center gap-3">
               <img
@@ -108,7 +114,7 @@ export default function LoginPage() {
           <div>
             <h2 className="text-3xl font-bold tracking-tight text-foreground">Sign in</h2>
             <p className="mt-2 text-muted-foreground text-sm">
-              Don't have an account?{" "}
+              Do not have an account?{" "}
               <Link href="/register" className="font-semibold text-primary hover:underline">
                 Create one for free
               </Link>
