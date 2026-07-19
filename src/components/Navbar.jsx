@@ -38,6 +38,9 @@ export default function Navbar() {
             <Link href="/products" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               Products
             </Link>
+            <Link href="/blog" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+              Blog
+            </Link>
             <Link href="/dashboard" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               Dashboard
             </Link>
@@ -97,6 +100,9 @@ export default function Navbar() {
             </Link>
             <Link href="/products" className="block rounded-md px-3 py-2 text-base font-medium text-muted-foreground hover:bg-accent hover:text-accent-foreground">
               Products
+            </Link>
+            <Link href="/blog" className="block rounded-md px-3 py-2 text-base font-medium text-muted-foreground hover:bg-accent hover:text-accent-foreground">
+              Blog
             </Link>
             {session?.user ? (
               <>

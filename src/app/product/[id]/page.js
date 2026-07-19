@@ -2,11 +2,12 @@
 
 import { use, useEffect, useState } from "react";
 import { Button, Card,  } from "@heroui/react";
-import { ArrowLeft, ShoppingCart, Sparkles, Star } from "lucide-react";
+import { ArrowLeft, ShoppingCart, Sparkles, Star, Lock } from "lucide-react";
 import Link from "next/link";
 import ScrollReveal from "@/components/ScrollReveal";
 import { useCart } from "@/components/CartContext";
 import { useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
 
 export default function ProductDetailsPage({ params }) {
   const unwrappedParams = use(params);
@@ -17,6 +18,7 @@ export default function ProductDetailsPage({ params }) {
 
   const router = useRouter();
   const { addToCart } = useCart();
+  const { data: session, isPending } = authClient.useSession();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -43,6 +45,46 @@ export default function ProductDetailsPage({ params }) {
 
     fetchProduct();
   }, [productId]);
+
+  // Gate: only allow logged-in users to view product details
+  if (isPending) {
+    return (
+      <div className="min-h-screen flex justify-center items-center">
+        Loading...
+      </div>
+    );
+  }
+
+  if (!session?.user) {
+    return (
+      <div className="min-h-screen flex flex-col justify-center items-center gap-4 px-4 text-center">
+        <div className="rounded-full bg-primary/10 p-5 text-primary">
+          <Lock className="h-10 w-10" />
+        </div>
+        <h1 className="text-2xl font-bold text-foreground">
+          Please sign in to view this product
+        </h1>
+        <p className="max-w-sm text-muted-foreground">
+          You need to be logged in to access product details. Create an account
+          or sign in to continue.
+        </p>
+        <div className="flex gap-3">
+          <button
+            onClick={() => router.push("/login")}
+            className="rounded-xl bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90"
+          >
+            Sign In
+          </button>
+          <Link
+            href="/register"
+            className="rounded-xl border border-border px-6 py-2.5 text-sm font-semibold text-foreground hover:bg-muted/50"
+          >
+            Register
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   if (loading) {
     return (

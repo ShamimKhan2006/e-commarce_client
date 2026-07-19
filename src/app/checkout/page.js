@@ -7,9 +7,11 @@ import { useState } from "react";
 import ScrollReveal from "@/components/ScrollReveal";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
+import { authClient } from "@/lib/auth-client";
 
 export default function CheckoutPage() {
   const { cart, updateQuantity, removeFromCart } = useCart();
+  const { data: session } = authClient.useSession();
   const [loading, setLoading] = useState(false);
 
   // Compute pricing totals
