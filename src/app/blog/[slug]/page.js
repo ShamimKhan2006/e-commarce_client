@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Calendar, Tag } from "lucide-react";
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 
 const client = new MongoClient(process.env.MONGODB_URL);
 const dbName = "e-commerce";
@@ -11,9 +11,13 @@ export const dynamic = "force-dynamic";
 async function getPost(slugOrId) {
   await client.connect();
   const db = client.db(dbName);
-  const post = await db.collection("blog").findOne({
-    $or: [{ slug: slugOrId }, { _id: slugOrId }],
-  });
+  let query;
+  try {
+    query = { $or: [{ slug: slugOrId }, { _id: new ObjectId(slugOrId) }] };
+  } catch {
+    query = { slug: slugOrId };
+  }
+  const post = await db.collection("blog").findOne(query);
   if (!post) return null;
   return {
     id: post._id.toString(),

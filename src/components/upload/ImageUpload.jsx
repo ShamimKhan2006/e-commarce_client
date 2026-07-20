@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import { Upload, X, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
+import { authClient } from "@/lib/auth-client";
 
 export default function ImageUpload({
   value,
@@ -29,11 +30,19 @@ export default function ImageUpload({
 
       setUploading(true);
       try {
+        const session = await authClient.getSession();
+        const headers = {};
+        if (session?.user) {
+          headers["x-user-id"] = session.user.id;
+          headers["x-user-email"] = session.user.email;
+          headers["x-user-role"] = session.user.role || "user";
+        }
         const formData = new FormData();
         formData.append("file", file);
 
         const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/upload`, {
           method: "POST",
+          headers,
           body: formData,
         });
 

@@ -29,31 +29,35 @@ export default function CheckoutPage() {
     if (cart.length === 0) return;
     setLoading(true);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/checkout`, {
+      const session = await authClient.getSession();
+      const headers = { "Content-Type": "application/json" };
+      if (session?.user) {
+        headers["x-user-id"] = session.user.id;
+        headers["x-user-email"] = session.user.email;
+        headers["x-user-role"] = session.user.role || "user";
+      }
+      const response = await fetch("/api/checkout", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-user-id": session?.user?.id || "",
-          "x-user-email": session?.user?.email || "",
-          "x-user-role": session?.user?.role || "user",
-        },
+        headers,
         body: JSON.stringify({
           items: cart,
-          userId: session?.user?.id || null,
-          email: session?.user?.email || null,
+          total: total,
         }),
       });
 
       const data = await response.json();
       if (data.url) {
         window.location.href = data.url;
+      } else if (response.ok && data._id) {
+        toast.success("Order placed successfully!");
+        window.location.href = "/success";
       } else {
         toast.error(data.error || "Failed to proceed to checkout.");
         setLoading(false);
       }
     } catch (e) {
       console.error(e);
-      toast.error("An unexpected error occurred during checkout.");
+      toast.error("An unexpected error occurred.");
       setLoading(false);
     }
   };
