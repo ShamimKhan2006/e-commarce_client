@@ -40,7 +40,7 @@ export default function ImageUpload({
         const formData = new FormData();
         formData.append("file", file);
 
-        const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/upload`, {
+        const res = await fetch(`/api/upload`, {
           method: "POST",
           headers,
           body: formData,

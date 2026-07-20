@@ -14,6 +14,7 @@ export default function ProductDetailsPage({ params }) {
   const productId = unwrappedParams.id;
 
   const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
 
 
   const router = useRouter();
@@ -24,7 +25,7 @@ export default function ProductDetailsPage({ params }) {
     const fetchProduct = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_URL}/products/${productId}`,
+          `/api/products/${productId}`,
           {
             cache: "no-store",
           }

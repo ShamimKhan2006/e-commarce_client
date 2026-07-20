@@ -20,7 +20,7 @@ export default function ProductsPage() {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/products`, {
+        const res = await fetch(`/api/products`, {
           cache: "no-store",
         });
         if (!res.ok) throw new Error("Failed to fetch products");

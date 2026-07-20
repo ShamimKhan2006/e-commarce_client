@@ -14,7 +14,7 @@ import toast from "react-hot-toast";
 import ImageUpload from "@/components/upload/ImageUpload";
 import { authClient } from "@/lib/auth-client";
 
-const API = process.env.NEXT_PUBLIC_URL;
+const API = "/api";
 
 const EMPTY_FORM = {
   title: "",

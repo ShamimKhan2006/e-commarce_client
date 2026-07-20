@@ -24,7 +24,7 @@ export default function OverviewContent() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/products`, {
+        const res = await fetch(`/api/products`, {
           cache: "no-store",
         });
         if (!res.ok) throw new Error("Failed to fetch");

@@ -28,7 +28,7 @@ export default function BlogManagePage() {
   const load = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/blogs`, { cache: "no-store" });
+      const res = await fetch(`/api/blogs`, { cache: "no-store" });
       if (!res.ok) throw new Error();
       const data = await res.json();
       setPosts(Array.isArray(data.posts) ? data.posts : []);
@@ -81,7 +81,7 @@ export default function BlogManagePage() {
         "x-user-email": session?.user?.email || "",
         "x-user-role": session?.user?.role || "user",
       };
-      const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/blogs`, {
+      const res = await fetch(`/api/blogs`, {
         method: "POST",
         headers,
         body: JSON.stringify(payload),
@@ -103,7 +103,7 @@ export default function BlogManagePage() {
   const handleDelete = async (p) => {
     if (!confirm(`Delete "${p.title}"?`)) return;
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/blogs/${p.id}`, { method: "DELETE" });
+        const res = await fetch(`/api/blogs/${p.id}`, { method: "DELETE" });
       if (!res.ok) throw new Error();
       toast.success("Post deleted");
       setPosts((prev) => prev.filter((x) => x.id !== p.id));

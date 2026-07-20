@@ -32,7 +32,7 @@ export default function CustomersPage() {
       setLoading(true);
       setError("");
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/admin/customers`, { cache: "no-store" });
+        const res = await fetch(`/api/admin/customers`, { cache: "no-store" });
         if (res.status === 401 || res.status === 403) {
           setError("You don't have permission to view customers.");
           setCustomers([]);
