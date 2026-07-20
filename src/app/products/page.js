@@ -25,7 +25,7 @@ export default function ProductsPage() {
         });
         if (!res.ok) throw new Error("Failed to fetch products");
         const data = await res.json();
-        setProducts(Array.isArray(data) ? data : []);
+        setProducts(Array.isArray(data.products) ? data.products : Array.isArray(data) ? data : []);
       } catch (e) {
         console.error(e);
       } finally {
