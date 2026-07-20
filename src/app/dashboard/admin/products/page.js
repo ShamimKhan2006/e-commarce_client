@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import ImageUpload from "@/components/upload/ImageUpload";
+import { authClient } from "@/lib/auth-client";
 
 const API = process.env.NEXT_PUBLIC_URL;
 
@@ -82,6 +83,14 @@ export default function ProductsPage() {
         rating: form.rating ? Number(form.rating) : undefined,
       };
 
+      const session = await authClient.getSession();
+      const headers = {
+        "Content-Type": "application/json",
+        "x-user-id": session?.user?.id || "",
+        "x-user-email": session?.user?.email || "",
+        "x-user-role": session?.user?.role || "user",
+      };
+
       const url = editing
         ? `${API}/products/${editing._id}`
         : `${API}/products`;
@@ -89,18 +98,21 @@ export default function ProductsPage() {
 
       const res = await fetch(url, {
         method,
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify(payload),
       });
 
-      if (!res.ok) throw new Error("Request failed");
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || "Request failed");
+      }
 
       toast.success(editing ? "Product updated!" : "Product added!");
       setModalOpen(false);
       fetchProducts();
     } catch (e) {
       console.error(e);
-      toast.error("Failed to save product.");
+      toast.error(e.message || "Failed to save product.");
     } finally {
       setSaving(false);
     }
@@ -109,8 +121,15 @@ export default function ProductsPage() {
   const handleDelete = async (product) => {
     if (!confirm(`Delete "${product.title}"? This cannot be undone.`)) return;
     try {
+      const session = await authClient.getSession();
+      const headers = {
+        "x-user-id": session?.user?.id || "",
+        "x-user-email": session?.user?.email || "",
+        "x-user-role": session?.user?.role || "user",
+      };
       const res = await fetch(`${API}/products/${product._id}`, {
         method: "DELETE",
+        headers,
       });
       if (!res.ok) throw new Error("Delete failed");
       toast.success("Product deleted.");

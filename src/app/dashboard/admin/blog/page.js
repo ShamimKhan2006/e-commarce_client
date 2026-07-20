@@ -67,8 +67,6 @@ export default function BlogManagePage() {
     e.preventDefault();
     setSaving(true);
     try {
-      // For admin-only edits we go through the same route; for simplicity
-      // we only support create here. (Edit/delete can be added server-side later.)
       const payload = {
         ...form,
         tags: form.tags
@@ -76,9 +74,16 @@ export default function BlogManagePage() {
           .map((t) => t.trim())
           .filter(Boolean),
       };
-      const res = await fetch("/api/blog", {
+      const session = await authClient.getSession();
+      const headers = {
+        "Content-Type": "application/json",
+        "x-user-id": session?.user?.id || "",
+        "x-user-email": session?.user?.email || "",
+        "x-user-role": session?.user?.role || "user",
+      };
+      const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/blogs`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify(payload),
       });
       if (!res.ok) {
