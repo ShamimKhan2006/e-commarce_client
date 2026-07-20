@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { UserCog, Bell, Palette } from "lucide-react";
+import { UserCog, Bell, Palette, Upload } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import toast from "react-hot-toast";
+import ImageUpload from "@/components/upload/ImageUpload";
 
 export default function UserSettingsPage() {
   const { data: session } = authClient.useSession();
@@ -54,6 +55,22 @@ export default function UserSettingsPage() {
             </Field>
             <Field label="Email">
               <input className="form-input" defaultValue={session?.user?.email || ""} disabled />
+            </Field>
+            <Field label="Avatar">
+              <ImageUpload
+                value={session?.user?.image || ""}
+                onChange={async (url) => {
+                  try {
+                    await authClient.updateUser({ image: url });
+                    toast.success("Avatar updated");
+                    window.location.reload();
+                  } catch {
+                    toast.error("Failed to update avatar");
+                  }
+                }}
+                aspectRatio="aspect-square max-w-[100px]"
+                placeholder="Upload avatar"
+              />
             </Field>
           </div>
         </div>

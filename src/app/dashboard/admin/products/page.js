@@ -11,6 +11,7 @@ import {
   Package,
 } from "lucide-react";
 import toast from "react-hot-toast";
+import ImageUpload from "@/components/upload/ImageUpload";
 
 const API = process.env.NEXT_PUBLIC_URL;
 
@@ -307,13 +308,17 @@ export default function ProductsPage() {
                 />
               </Field>
 
-              <Field label="Image URL" required>
+              <Field label="Image" required>
+                <ImageUpload
+                  value={form.image}
+                  onChange={(url) => setForm({ ...form, image: url })}
+                  aspectRatio="aspect-video max-w-[200px]"
+                  placeholder="Upload product image"
+                />
                 <input
-                  required
+                  type="hidden"
                   value={form.image}
                   onChange={(e) => setForm({ ...form, image: e.target.value })}
-                  className="form-input"
-                  placeholder="https://..."
                 />
               </Field>
 

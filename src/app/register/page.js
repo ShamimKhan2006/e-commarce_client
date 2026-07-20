@@ -6,6 +6,7 @@ import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { Mail, Lock, User, Eye, EyeOff, ArrowRight, CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
+import ImageUpload from "@/components/upload/ImageUpload";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -15,6 +16,7 @@ export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [avatar, setAvatar] = useState("");
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -25,7 +27,7 @@ export default function RegisterPage() {
         email,
         password,
         name,
-        image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100",
+        image: avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100",
       });
       if (error) {
         setError(error.message || "Could not create account. Please try again.");
@@ -86,21 +88,32 @@ export default function RegisterPage() {
           )}
 
           <form className="space-y-5" onSubmit={handleRegister}>
-            {/* Name */}
-            <div className="space-y-1.5">
-              <label className="text-sm font-medium text-foreground">Full name</label>
-              <div className="relative">
-                <User className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <input
-                  type="text"
-                  required
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="John Doe"
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-muted/30 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all text-sm"
-                />
-              </div>
-            </div>
+             {/* Name */}
+             <div className="space-y-1.5">
+               <label className="text-sm font-medium text-foreground">Full name</label>
+               <div className="relative">
+                 <User className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                 <input
+                   type="text"
+                   required
+                   value={name}
+                   onChange={(e) => setName(e.target.value)}
+                   placeholder="John Doe"
+                   className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-muted/30 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all text-sm"
+                 />
+               </div>
+             </div>
+
+             {/* Profile Image */}
+             <div className="space-y-1.5">
+               <label className="text-sm font-medium text-foreground">Profile Image</label>
+               <ImageUpload
+                 value={avatar}
+                 onChange={setAvatar}
+                 aspectRatio="aspect-square max-w-[160px]"
+                 placeholder="Upload profile photo"
+               />
+             </div>
 
             {/* Email */}
             <div className="space-y-1.5">

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Plus, Pencil, Trash2, X, FileText } from "lucide-react";
 import toast from "react-hot-toast";
 import { authClient } from "@/lib/auth-client";
+import ImageUpload from "@/components/upload/ImageUpload";
 
 const EMPTY = {
   title: "",
@@ -265,14 +266,12 @@ export default function BlogManagePage() {
                   placeholder="Write your article here... (one paragraph per line)"
                 />
               </Field>
-              <Field label="Cover Image URL">
-                <input
+              <Field label="Cover Image">
+                <ImageUpload
                   value={form.coverImage}
-                  onChange={(e) =>
-                    setForm({ ...form, coverImage: e.target.value })
-                  }
-                  className="form-input"
-                  placeholder="https://..."
+                  onChange={(url) => setForm({ ...form, coverImage: url })}
+                  aspectRatio="aspect-video max-w-[240px]"
+                  placeholder="Upload cover image"
                 />
               </Field>
               <Field label="Tags (comma separated)">
