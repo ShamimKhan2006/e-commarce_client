@@ -29,10 +29,19 @@ export default function CheckoutPage() {
     if (cart.length === 0) return;
     setLoading(true);
     try {
-      const response = await fetch("/api/checkout", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/checkout`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items: cart }),
+        headers: {
+          "Content-Type": "application/json",
+          "x-user-id": session?.user?.id || "",
+          "x-user-email": session?.user?.email || "",
+          "x-user-role": session?.user?.role || "user",
+        },
+        body: JSON.stringify({
+          items: cart,
+          userId: session?.user?.id || null,
+          email: session?.user?.email || null,
+        }),
       });
 
       const data = await response.json();
