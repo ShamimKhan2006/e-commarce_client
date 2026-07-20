@@ -14,7 +14,7 @@ export default function ProductDetailsPage({ params }) {
   const productId = unwrappedParams.id;
 
   const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
+
 
   const router = useRouter();
   const { addToCart } = useCart();
@@ -86,13 +86,7 @@ export default function ProductDetailsPage({ params }) {
     );
   }
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex justify-center items-center">
-        Loading...
-      </div>
-    );
-  }
+  
 
   if (!product) {
     return (

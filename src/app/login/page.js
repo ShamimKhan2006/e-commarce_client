@@ -23,15 +23,14 @@ export default function LoginPage() {
     try {
       const {data, error } = await authClient.signIn.email({ email, password });
        if(data){
-        return toast.success('Login Successfully')
+        toast.success('Login Successfully') 
+        return router.push("/");
        }
 
 
       if (error) {
         setError(error.message || "Invalid credentials. Please try again.");
-      } else {
-        router.push("/dashboard");
-      }
+      } 
     } catch {
       setError("An unexpected error occurred. Please try again.");
     } finally {
