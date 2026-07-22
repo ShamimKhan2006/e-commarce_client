@@ -4,6 +4,7 @@ import { useCart } from "@/components/CartContext";
 import { Trash2, Plus, Minus, ArrowRight, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import ScrollReveal from "@/components/ScrollReveal";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
