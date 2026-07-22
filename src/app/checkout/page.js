@@ -3,15 +3,16 @@
 import { useCart } from "@/components/CartContext";
 import { Trash2, Plus, Minus, ArrowRight, ShoppingBag } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
 import ScrollReveal from "@/components/ScrollReveal";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import { authClient } from "@/lib/auth-client";
 
 export default function CheckoutPage() {
+  const router = useRouter();
   const { cart, updateQuantity, removeFromCart } = useCart();
-  const { data: session } = authClient.useSession();
+  const { data: session, isPending: authPending } = authClient.useSession();
   const [loading, setLoading] = useState(false);
 
   // Compute pricing totals
@@ -27,15 +28,23 @@ export default function CheckoutPage() {
 
   const handleCheckout = async () => {
     if (cart.length === 0) return;
+    if (authPending) {
+      toast.error("Please wait, loading your session...");
+      return;
+    }
+    if (!session?.user?.id || !session?.user?.email) {
+      toast.error("Session expired. Please sign in again.");
+      router.push("/login");
+      return;
+    }
     setLoading(true);
     try {
-      const session = await authClient.getSession();
-      const headers = { "Content-Type": "application/json" };
-      if (session?.user) {
-        headers["x-user-id"] = session.user.id;
-        headers["x-user-email"] = session.user.email;
-        headers["x-user-role"] = session.user.role || "user";
-      }
+      const headers = {
+        "Content-Type": "application/json",
+        "x-user-id": session.user.id,
+        "x-user-email": session.user.email,
+        "x-user-role": session.user.role || "user",
+      };
       const response = await fetch(`/api/checkout`, {
         method: "POST",
         headers,
@@ -48,7 +57,7 @@ export default function CheckoutPage() {
       const data = await response.json();
       if (data.url) {
         window.location.href = data.url;
-      } else if (response.ok && data._id) {
+      } else if (response.ok) {
         toast.success("Order placed successfully!");
         window.location.href = "/success";
       } else {

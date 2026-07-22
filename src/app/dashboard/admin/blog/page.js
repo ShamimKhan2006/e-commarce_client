@@ -387,11 +387,7 @@ const EMPTY = {
   published: true,
 };
 
-// FIX: authClient.getSession() resolves to { data, error }, not the session
-// object directly. The old code read session?.user?.id, which was always
-// undefined -> empty x-user-id/x-user-email headers -> backend requireAuth
-// always returned 401. Centralized here so handleSave and handleDelete both
-// build headers the same (correct) way.
+
 async function getAuthHeaders() {
   const { data } = await authClient.getSession();
   return {
