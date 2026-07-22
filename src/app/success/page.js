@@ -6,7 +6,7 @@ export default function SuccessPage() {
           <span className="text-3xl">✅</span>
         </div>
 
-        <h1 className="text-3xl font-bold mt-6">
+        <h1 className="text-3xl font-bold mt-6 text-green-500">
           Payment Successful
         </h1>
 
